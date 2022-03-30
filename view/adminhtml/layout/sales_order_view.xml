@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="order_items">
+            <arguments>
+                <argument name="columns" xsi:type="array">
+                    <item name="ordergroove_discount_value" xsi:type="string" translate="true">Ordergroove Discount
+                    </item>
+                </argument>
+            </arguments>
+            <referenceBlock name="default_order_items_renderer">
+                <arguments>
+                    <argument name="columns" xsi:type="array">
+                        <item name="ordergroove_discount_value" xsi:type="string" translate="true">col-ordergroove_discount_value</item>
+                    </argument>
+                </arguments>
+            </referenceBlock>
+            <block class="Magento\Sales\Block\Adminhtml\Items\Column\DefaultColumn"
+                   name="column_ordergroove_discount_value"
+                   template="Ordergroove_Subscription::ordergroove_discount.phtml" group="column"/>
+        </referenceBlock>
+        <referenceBlock name="order_items.bundle">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Ordergroove_Subscription::sales/order/view/items/renderer.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

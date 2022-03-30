@@ -1,0 +1,9 @@
+<?php
+/**
+ * @var Ordergroove\Subscription\Block\MsiJs $block
+ */
+?>
+<script>
+    require(["<?= $block->getMsiJsUrl() ?>"]);
+</script>
+<div id="og-msi" ng-jq=""></div>

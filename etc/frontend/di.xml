@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="ordergroove_config_provider" xsi:type="object">Ordergroove\Subscription\Model\Config\ConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="\Magento\Customer\Controller\Account\LoginPost">
+        <plugin name="create_cookie_onlogin" type="Ordergroove\Subscription\Plugin\Account\Login\CreateCookie" sortOrder="10" disabled="false"/>
+    </type>
+
+    <type name="Magento\Customer\Controller\Account\Logout">
+        <plugin name="delete_cookie_onlogout" type="Ordergroove\Subscription\Plugin\Account\Logout\DeleteCookie" sortOrder="20" disabled="false"/>
+    </type>
+
+    <type name="Magento\Customer\Controller\Address\FormPost">
+        <plugin name="change_telephone_customer_update"
+                type="Ordergroove\Subscription\Plugin\Account\Telephone\ChangeInTelephone" sortOrder="30" disabled="false"/>
+    </type>
+
+</config>

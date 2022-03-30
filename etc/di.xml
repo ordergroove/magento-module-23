@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="sensitive" xsi:type="array">
+                <item name="ordergroove_subscription/sftp/password" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\ProductSync\Info\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\ProductSync\Info\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">productsync-info</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Ordergroove\Subscription\Logger\ProductSync\Info\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\ProductSync\Error\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\ProductSync\Error\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">productsync-error</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="info" xsi:type="object">Ordergroove\Subscription\Logger\ProductSync\Error\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Ordergroove\Subscription\Logger\PurchasePost\Info\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\PurchasePost\Info\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">purchasepost-info</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Ordergroove\Subscription\Logger\PurchasePost\Info\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\PurchasePost\Error\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\PurchasePost\Error\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">purchasepost-error</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="info" xsi:type="object">Ordergroove\Subscription\Logger\PurchasePost\Error\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Checkout\CustomerData\AbstractItem">
+        <plugin name="ordergroove_subscription_minicart_item" type="Ordergroove\Subscription\Plugin\Checkout\CustomerData\AbstractItemPlugin" />
+    </type>
+
+    <type name="Ordergroove\Subscription\Logger\CustomerUpdates\Info\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\CustomerUpdates\Info\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">customer_updates_info</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Ordergroove\Subscription\Logger\CustomerUpdates\Info\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\CustomerUpdates\Error\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\CustomerUpdates\Error\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">customer_updates_error</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="info" xsi:type="object">Ordergroove\Subscription\Logger\CustomerUpdates\Error\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Ordergroove\Subscription\Logger\RecurringOrder\Info\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\RecurringOrder\Info\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">recurringorders-info</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Ordergroove\Subscription\Logger\RecurringOrder\Info\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\RecurringOrder\Error\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Ordergroove\Subscription\Logger\RecurringOrder\Error\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">recurringorders-error</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="info" xsi:type="object">Ordergroove\Subscription\Logger\RecurringOrder\Error\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Vault\Api\PaymentTokenManagementInterface">
+        <plugin disabled="false" name="vault_unique_constraint_fix" sortOrder="10" type="Ordergroove\Subscription\Plugin\Vault\Api\PaymentTokenManagementPlugin"/>
+    </type>
+
+    <type name="Magento\Quote\Model\Quote\Address">
+        <plugin disabled="false" name="ordergroove_shipping_rate_plugin" sortOrder="10" type="Ordergroove\Subscription\Plugin\Quote\Model\Quote\ShippingRatePlugin"/>
+    </type>
+
+    <type name="Magento\SalesRule\Model\RulesApplier">
+        <plugin disabled="false" name="remove_cart_rules_for_recurring_order" sortOrder="10"
+                type="Ordergroove\Subscription\Plugin\SalesRule\Model\RulesApplier"/>
+    </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="ordergroove_subscription_logging_data_source" xsi:type="string">OrdergrooveLoggingCollection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="OrdergrooveLoggingCollection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">ordergroove_logging</argument>
+            <argument name="resourceModel" xsi:type="string">Ordergroove\Subscription\Model\Logging\ResourceModel\OrdergrooveLogging</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Sales\Api\OrderManagementInterface">
+        <plugin name="after_place_order_save_extension"
+                type="Ordergroove\Subscription\Plugin\OrderManagement"/>
+    </type>
+
+    <type name="Magento\Rule\Model\Condition\Combine">
+        <plugin name="cart_rule_subscription_products"
+                type="Ordergroove\Subscription\Plugin\SalesRule\Model\Condition\CombinePlugin" sortOrder="10"
+                disabled="false"/>
+    </type>
+</config>

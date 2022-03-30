@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_save_after_data_object">
+        <observer name="customer_email_change_update"
+                  instance="Ordergroove\Subscription\Observer\CustomerUpdate\ChangeInEmail"/>
+    </event>
+    <event name="payment_method_assign_data">
+        <observer name="ordergroove_subscription_data_assign" instance="Ordergroove\Subscription\Observer\DataAssignObserver" />
+    </event>
+</config>

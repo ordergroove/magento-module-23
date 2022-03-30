@@ -1,0 +1,34 @@
+<?php
+/**
+ * @var Ordergroove\Subscription\ViewModel\Product\GetProductInformation $viewModel
+ */
+
+$viewModel = $block->getData('viewModel');
+$product = $viewModel->getProduct();
+$productId = $viewModel->getProductId();
+?>
+<div class="default_og_offers" id="default_og_offers">
+    <?php if ($viewModel->isProductTypeBundle()) : ?>
+        <div class="bundle-products-og-offers" id="bundle-products-og-offers">
+            <og-offer product="<?= $productId ?>" location="pdp"
+                      product-components="<?= $block->escapeHtmlAttr($viewModel->getBundleDefaultProductComponents()) ?>"></og-offer>
+        </div>
+        <script type="text/x-magento-init">
+        {
+            "*": {
+                "Ordergroove_Subscription/js/updateSelections": {
+                    "updatedBundleComponents": <?= $viewModel->getUpdatedProductIDMap($product) ?>,
+                    "CurrentProduct": <?= json_encode((String)$productId) ?>
+                }
+            }
+        }
+
+        </script>
+    <?php else : ?>
+        <div class="simple-and-configurable-products-og-offers">
+            <og-offer product="<?= $productId ?>" location="pdp"></og-offer>
+        </div>
+    <?php endif; ?>
+</div>
+<div class="changed_og_offers" id="changed_og_offers" style="display: none">
+</div>

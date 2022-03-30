@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Ordergroove_Subscription::ordergroove" title="Ordergroove" module="Ordergroove_Subscription"
+             sortOrder="100" action="ordergroove/subscription"
+             resource="Ordergroove_Subscription::ordergroove"/>
+
+        <add id="Ordergroove_Subscription::rc3admin" title="RC3 admin"
+             module="Ordergroove_Subscription" sortOrder="10"
+             parent="Ordergroove_Subscription::ordergroove"
+             action="ordergrooveadmin/rc3admin" resource="Ordergroove_Subscription::rc3admin"/>
+
+        <add id="Ordergroove_Subscription::ordergroovelogging" title="Ordergroove Logging"
+             module="Ordergroove_Subscription" sortOrder="20"
+             parent="Ordergroove_Subscription::ordergroove"
+             action="ordergrooveadmin/logging" resource="Ordergroove_Subscription::ordergroovelogging"/>
+
+        <add id="Ordergroove_Subscription::configuration" title="Ordergroove Configuration"
+             module="Ordergroove_Subscription" sortOrder="30"
+             parent="Ordergroove_Subscription::ordergroove"
+             action="adminhtml/system_config/edit/section/ordergroove_subscription"
+             resource="Ordergroove_Subscription::configuration"/>
+    </menu>
+</config>

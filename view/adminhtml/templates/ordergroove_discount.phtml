@@ -1,0 +1,10 @@
+<?php
+$ordergrooveDiscount = $block->getItem()->getData('ordergroove_discount_value');
+if ($ordergrooveDiscount) : ?>
+    <span><?= /* @escapeNotVerified */
+        __($block->getOrder()->formatPrice($ordergrooveDiscount)) ?></span>
+<?php else: ?>
+    <span><?= /* @escapeNotVerified */
+        __($block->getOrder()->formatPrice(0.00)) ?></span>
+<?php endif; ?>
+

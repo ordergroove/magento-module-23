@@ -1,0 +1,15 @@
+<?php
+$_item = $block->getItem();
+$product = $_item->getProduct();
+$productId = $product->getId();
+$simple = $_item->getOptionByCode('simple_product');
+
+if ($simple) {
+    $productId = $simple->getProductId();
+}
+
+$itemId = $_item->getItemId();
+$itemQty = $_item->getQty();
+?>
+
+<og-offer product="<?= $productId ?>" data-line-id="<?= $itemId ?>" data-line-qty="<?= $itemQty ?>" location='cart'></og-offer>

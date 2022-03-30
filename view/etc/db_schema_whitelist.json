@@ -1,0 +1,37 @@
+{
+    "quote_item": {
+        "column": {
+            "ordergroove_discount_value": true
+        }
+    },
+    "sales_order_item": {
+        "column": {
+            "ordergroove_discount_value": true
+        }
+    },
+    "ordergroove_logging": {
+        "column": {
+            "entity_id": true,
+            "log_date": true,
+            "file_path": true,
+            "error_message": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "ordergroove_order_type": {
+        "column": {
+            "entity_id": true,
+            "order_id": true,
+            "ordergroove_order_type": true
+        },
+        "index": {
+            "ORDERGROOVE_ORDER_TYPE_ORDER_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "ORDERGROOVE_ORDER_TYPE_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+        }
+    }
+}

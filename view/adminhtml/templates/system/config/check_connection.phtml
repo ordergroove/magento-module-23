@@ -1,0 +1,80 @@
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/alert',
+        'mage/translate'
+    ], function($, alert, $t){
+        $('#check_connection_button').click(function() {
+
+            /* Remove previous success message if present */
+            if ($(".ordergroove-sftp-success-message")) {
+                $(".ordergroove-sftp-success-message").remove();
+            }
+
+            var sftpHost = $("#ordergroove_subscription_sftp_host").val();
+            var sftpPort = $("#ordergroove_subscription_sftp_port").val();
+            var sftpUser = $("#ordergroove_subscription_sftp_username").val();
+            var sftpPassword = $("#ordergroove_subscription_sftp_password").val();
+
+            /* Basic field validation */
+            var errors = [];
+
+            if (!sftpHost) {
+                errors.push($t("Please enter an SFTP Host"));
+            }
+
+            if (!sftpPort) {
+                errors.push($t("Please enter an SFTP Port"));
+            }
+
+            if (!sftpUser) {
+                errors.push($t("Please enter an SFTP Username"));
+            }
+
+            if (!sftpPassword) {
+                errors.push($t("Please enter an SFTP Password"));
+            }
+
+            if (errors.length > 0) {
+                alert({
+                    title: $t('Ordergroove SFTP Validation Failed'),
+                    content:  errors.join('<br />')
+                });
+                return false;
+            }
+
+            var button = $('#check_connection_button');
+            button.text('Validating credentials...').attr('disabled',true);
+
+            $.post(<?= /* @noEscape */ json_encode($block->getAjaxUrl()) ?>, {
+                host: sftpHost,
+                port: sftpPort,
+                username: sftpUser,
+                password: sftpPassword
+            }).done(function (json) {
+                if(json['success']) {
+                    $('<div class="message message-success ordergroove-sftp-success-message">'
+                        + $t("Your credentials are valid.")
+                        + '</div>'
+                    ).insertAfter(button);
+                } else {
+                    alert({
+                        title: $t('Ordergroove SFTP Credentials Validation Failed'),
+                        content: $t('Your Ordergroove SFTP credentials could not be validated.'
+                            + ' Please ensure you have selected the correct website and have entered a host, port, username, and password.'
+                        )
+                    });
+                }
+            }).fail(function () {
+                alert({
+                    title: $t('Ordergroove SFTP Credentials Validation Could Not Be Reached'),
+                    content: $t('Something went wrong. Please try validating again.')
+                });
+            }).always(function () {
+                $(button).text($t("Check Connection")).attr('disabled', false);
+            })
+        });
+    });
+</script>
+<div id="check_connection_messages"></div>
+<?= $block->getButtonHtml() ?>

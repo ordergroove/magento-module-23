@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="ordergroove" translate="label" sortOrder="400">
+            <label>Ordergroove</label>
+        </tab>
+        <section id="ordergroove_subscription" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+            <class>separator-top</class>
+            <label>Subscription</label>
+            <tab>ordergroove</tab>
+            <resource>Ordergroove_Subscription::subscription_config</resource>
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>General Configuration</label>
+                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Module Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="staging" translate="label" type="select" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                    <label>Environment</label>
+                    <tooltip>This field should always be set to Production unless explicitly stated otherwise by Ordergroove</tooltip>
+                    <source_model>Ordergroove\Subscription\Model\Config\Source\UrlType</source_model>
+                </field>
+                <field id="public_id" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                    <label>Public ID</label>
+                </field>
+                <field id="hash_key" translate="label" type="obscure" sortOrder="30" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <depends>
+                        <field id="enable">1</field>
+                    </depends>
+                    <label>Hash Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+            </group>
+            <group id="sftp" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
+                <depends>
+                    <field id="ordergroove_subscription/general/enable">1</field>
+                </depends>
+                <label>SFTP Configuration</label>
+                <comment>Sync Schedule is only available in the default view level.</comment>
+                <field id="sync_schedule" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sync Schedule (EST)</label>
+                    <source_model>Ordergroove\Subscription\Model\Config\Source\SyncSelect</source_model>
+                </field>
+                <field id="host" translate="label" type="text" sortOrder="4" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Host</label>
+                    <frontend_model>Ordergroove\Subscription\Block\System\Config\Form\Field\Disable</frontend_model>
+                </field>
+                <field id="port" translate="label" type="text" sortOrder="5" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Port</label>
+                    <frontend_model>Ordergroove\Subscription\Block\System\Config\Form\Field\Disable</frontend_model>
+                </field>
+                <field id="username" translate="label" type="text" sortOrder="6" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Username</label>
+                </field>
+                <field id="password" translate="label" type="obscure" sortOrder="7" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Password</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+                <field id="check_connection" translate="label comment tooltip" type="button" sortOrder="8" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Check Connection</label>
+                    <frontend_model>Ordergroove\Subscription\Block\System\Config\CheckConnection</frontend_model>
+                </field>
+            </group>
+            <group id="error_message" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
+                <depends>
+                    <field id="ordergroove_subscription/general/enable">1</field>
+                </depends>
+                <label>Error Message for Guests</label>
+                <field id="message" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Message</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

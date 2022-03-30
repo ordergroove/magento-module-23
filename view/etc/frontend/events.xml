@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_onepage_controller_success_action">
+        <observer name="send_purchase_post_to_ordergroove" instance="Ordergroove\Subscription\Observer\Sales\SendPurchasePost"/>
+    </event>
+    <event name="sales_quote_remove_item">
+        <observer name="delete_subscription_cookie" instance="Ordergroove\Subscription\Observer\Sales\QuoteRemoveItem"/>
+    </event>
+    <event name="controller_action_predispatch">
+        <observer name="set_og_cookie_on_page_load" instance="Ordergroove\Subscription\Observer\SetOGCookieOnPageLoad" />
+    </event>
+</config>

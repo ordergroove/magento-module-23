@@ -1,0 +1,130 @@
+variables:
+  - group: 'Azure Service Principal'
+  - group: 'Docker Build'
+
+pr:
+  branches:
+    include:
+      - master
+      - develop
+
+resources:
+  repositories:
+  - repository: OrderGroove-Ordergroove
+    endpoint: sdinteractive
+    name: sdinteractive/OrderGroove-Ordergroove
+    type: github
+    ref: commerce-2.3.5
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - refs/heads/master
+      - refs/heads/develop
+      - refs/tags/*
+
+pool:
+  name: "SD Docker Build Agents"
+
+stages:
+  - stage: ContinuousBuild
+    jobs:
+      - job: Docker_Build
+        displayName: "Build and Push Docker images"
+        steps:
+
+          - checkout: self
+            submodules: false
+            persistCredentials: true
+
+          - checkout: OrderGroove-Ordergroove
+
+          - bash: |
+              authExists=false
+              if [ -f $(System.DefaultWorkingDirectory)/OrderGroove-Ordergroove/auth.json ]; then
+                authExists=true
+              fi
+              echo "##vso[task.setvariable variable=authExists]$authExists"
+            displayName: "Verify if auth.json exists"
+            
+          - task: DownloadSecureFile@1
+            displayName: "Download magento authentication file for Accelerator builds"
+            name: "auth_json"
+            inputs:
+              secureFile: "$(AUTH_JSON)"
+
+          - bash: mv $(Agent.TempDirectory)/$(AUTH_JSON) $(System.DefaultWorkingDirectory)/OrderGroove-Ordergroove/auth.json
+            displayName: "Move auth_file to working directory (Accelerator only)"
+            condition: and(succeeded(), eq(variables['authExists'], 'false'))
+
+          # Setup environment
+          - task: Docker@2
+            displayName: "Login to container registry"
+            inputs:
+              containerRegistry: "$(IMAGE_REGISTRY_CONNECTION)"
+              command: "login"
+
+          - task: DownloadSecureFile@1
+            displayName: "Get ssh key"
+            name: "github_ssh_key"
+            inputs:
+              secureFile: "$(GITHUB_SSH_KEY)"
+
+          - bash: set -a || export IMAGE_TAG=`basename $(Build.SourceBranch)`
+            displayName: "Set image tags following git tags"
+            condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags'))
+
+          - bash: set -a || export DB_BRANCH=`basename $(System.PullRequest.TargetBranch)`
+            displayName: "Set test db branch for pull request"
+            condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+          # Build steps
+          - bash: |
+              git checkout -B azuretemp
+            displayName: "Checkout azuretemp branch in module repo"
+            workingDirectory: $(System.DefaultWorkingDirectory)/Ordergroove_Magento2_Module
+
+          - bash: |
+              cp -rf $(System.DefaultWorkingDirectory)/Ordergroove_Magento2_Module $(System.DefaultWorkingdirectory)/OrderGroove-Ordergroove/Ordergroove_Magento2_Module
+            displayName: "Move Ordergroove_Magento2_Module to test site filepath"
+
+          - bash: |
+              composer config repositories.ordergroove vcs ./Ordergroove_Magento2_Module/.git
+              composer require ordergroove/subscription dev-azuretemp --no-update
+            displayName: "Update composer in test site to include local module changes"
+            workingDirectory: $(System.DefaultWorkingDirectory)/OrderGroove-Ordergroove
+
+          - bash: |
+              export SSH_PRIVATE_KEY=`cat $(Agent.TempDirectory)/$(GITHUB_SSH_KEY)`
+              "$(System.DefaultWorkingDirectory)/OrderGroove-Ordergroove/cicd/build.sh"
+            displayName: "Build Docker images"
+
+          - bash: |
+              ls
+              ./cicd/test.sh
+            displayName: "Test Docker images"
+            condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/tags')))
+            env:
+              AZURE_STORAGE_KEY: $(AZURE_STORAGE_KEY)
+              AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
+              AZURE_CLIENT_SECRET: $(AZURE_CLIENT_SECRET)
+              AZURE_TENANT_ID: $(AZURE_TENANT_ID)
+            workingDirectory: $(System.DefaultWorkingDirectory)/OrderGroove-Ordergroove
+
+          - bash: ./OrderGroove-Ordergroove/cicd/push.sh
+            displayName: "Push Docker images"
+            condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+          - bash: ./OrderGroove-Ordergroove/cicd/promote.sh
+            displayName: "Promote Docker images"
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+          - bash: |
+              ./OrderGroove-Ordergroove/compose/bin/stop
+              docker system prune -f
+              docker volume prune -f
+              docker rmi $(docker images | grep 'ordergroove' | awk {'print $3'})
+              rm -rf ./OrderGroove-Ordergroove/Ordergroove_Magento2_Module
+            displayName: "Clean Up"
+            condition: or(failed(), succeeded())

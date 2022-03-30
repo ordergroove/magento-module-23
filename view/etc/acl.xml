@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Ordergroove_Subscription::subscription_config" title="Ordergroove Subscription"/>
+                        </resource>
+                    </resource>
+                </resource>
+                <resource id="Ordergroove_Subscription::ordergroove" title="Ordergroove" sortOrder="10">
+                    <resource id="Ordergroove_Subscription::rc3admin" title="Rc3 Admin" sortOrder="50"/>
+                    <resource id="Ordergroove_Subscription::ordergroovelogging" title="Ordergroove Logging"
+                              sortOrder="100"/>
+                    <resource id="Ordergroove_Subscription::configuration" title="Configuration" sortOrder="150"/>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>
